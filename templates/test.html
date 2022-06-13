@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <p id='message1'>Next Data Will Collecting in <span id='count1'> 5</span> Seconds.</p>
+    <button id="all_start" value="val_1" name="but1">All Day Kick Here</button>
+    <button id="btn_timer1" value="btn_timer1" name="btn_timer1">Timer</button>
+    <script type=text/javascript>
+        var message1 = document.getElementById("message1");
+        var startBtn1 = document.getElementById("btn_timer1");
+        var count1 = document.getElementById("count1");
+        var timer1;
+        var counter1 = 5;
+        var btn1 = document.querySelector("[name='but1']");
+        //ajax
+        $("#all_start").click(function(e) 
+        {
+          console.log('Btn Click');
+          var data =
+          {
+            'btn' : 'allday',
+          }
+          e.preventDefault();
+          $.when(
+          $.ajax
+          ({
+            type: "POST",
+            url: "/",
+            data: JSON.stringify(data, null, '\t'),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) 
+            {
+              console.log('post successed');
+            },
+            error: function(result) 
+            {
+              console.log('post error');
+            }
+          }))
+          .then(function( data ) 
+          {
+            console.log('ajax sucessed');
+            //timer
+            function StartCount1() 
+            {
+              this.style.display = 'block';
+              timer1 = setInterval(function () 
+              {
+                counter1--;
+                if (counter1 > 0) 
+                {
+                  count1.innerHTML = " " + counter1.toString(); // .innerHTML use to insert string 
+                }
+                if (counter1 == 0) 
+                {
+                  count1.innerHTML = " " + counter1.toString();
+                  message1.style.display = 'block';
+                  clearInterval(timer1); // use to stop setInterval
+                  counter1 = 5;
+                  btn1.click();
+                }
+              }, 1000);
+              return true;
+            };
+            startBtn1.onclick = StartCount1;
+            startBtn1.click();
+            //timer end          
+          });
+        });
+        //ajax end  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function StartCount1() 
+  {
+    this.style.display = 'block';
+    timer1 = setInterval(function () 
+  {
+    counter1--;
+    console.log('timer running', counter1)
+    if (counter1 > 0) 
+    {
+      count1.innerHTML = " " + counter1.toString(); // .innerHTML use to insert string 
+    }
+    if (counter1 == 0) 
+    {
+      console.log('timer already')
+      count1.innerHTML = " " + counter1.toString();
+      message1.style.display = 'block';
+      clearInterval(timer1); // use to stop setInterval
+      counter1 = 10;
+      startBtn1.click();
+    }
+  }, 1000);
+  return true;
+  };
+      </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

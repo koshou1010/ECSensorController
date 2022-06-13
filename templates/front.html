@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>SPEC Sensor Calibration System</title>
+  <script src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
+</head>
+
+<body>
+  <p id='message1'>Next Data Will Collecting in <span id='count1'> 60</span> Seconds.</p>
+  <button id="btn_all_start" value="btn_all_start" name="btn_all_start">All Day Kick Here</button>
+  <button id="btn_stop" value="btn_stop" name="btn_stop">Stop</button>
+
+  <script type=text/javascript>
+  let StopTimer1 = true
+  var count1 = document.getElementById("count1");
+  var message1 = document.getElementById("message1");
+  var AllDayBtn = document.getElementById("btn_all_start");
+  var StopBtn = document.getElementById("btn_stop");
+  AllDayBtn.onclick = AllDay_Func;
+  StopBtn.onclick = Stop_Func;
+
+  function Stop_Func() 
+  {
+    StopTimer1 = false
+    Ex_Status=0;
+    Ex_count = 0;
+  }
+  function AllDay_Func() 
+  {
+    StopTimer1 = true
+    if (StopTimer1 == true)
+    {
+      TESTA();
+    }
+  }
+
+  function TESTA() 
+  {
+    function AJAX() 
+    {
+
+      return  new Promise(function(resolve, reject) 
+      {
+        var data =
+        {
+          'btn' : 'allday',
+        }
+        $.ajax
+        ({
+          type: "POST",
+          url: "/",
+          data: JSON.stringify(data, null, '\t'),
+          contentType: 'application/json;charset=UTF-8',
+          success: function(result) 
+          {
+            console.log('ajax successed');
+          },
+          error: function(result) 
+          {
+            console.log('ajax error');
+          }
+        })
+        .done(resolve)
+        .fail(reject);
+      });
+    }
+
+    function Timer() 
+    {
+      return new Promise(function (resolve, reject) 
+      {
+        console.log("In the timer function");
+        let count = 60;
+        timer1 = setInterval(function () 
+        {
+          count--;
+          console.log(count, "timer running");
+          if (count > 0)
+          {
+            count1.innerHTML = " " + count.toString(); // .innerHTML use to insert string 
+          }
+          if (count == 0) 
+          {
+            count1.innerHTML = " " + count.toString();
+            message1.style.display = 'block';
+            resolve('Time is up');
+            clearInterval(timer1);
+            count = 60;
+          }
+        }, 1000);
+      });
+    }
+    var p1 = AJAX();
+    var p2 = Timer();
+    Promise.all([p1, p2]).then(values => 
+    {
+      console.log(values); 
+      if (StopTimer1 == true)
+      {
+        TESTB();
+      }
+      else
+      {
+        console.log('stop')
+      }
+    });
+  }
+  function TESTB()
+  {
+    TESTA();  
+  }
+
+  </script>
+
+  <br>
+  <input type="text" id="input_text" name="input_text" placeholder="ex., CO_25ppm">
+  <br>
+  <button id="ex_start" value="ex_start" name="ex_start">Experiment Kick Here</button>
+  <p id='message2'>Next Status will be in <span id='count2'> 300</span> Seconds.</p>
+
+  <script>
+  let Ex_count = 0;
+  let Ex_Status = 0;
+  let Switch_Sample = true;
+  let Switch_Purge = true;
+  var EXBtn = document.getElementById("ex_start");
+  EXBtn.onclick = Ex_Func;
+
+
+  function Ex_Func() 
+  {
+    StopTimer1 = true
+    if (StopTimer1 == true)
+    {
+      TESTA2();
+    }
+  }
+
+
+
+  function Switch_Sample_F() 
+  {
+    function AJAX_SS() //AJAX_switch_sample
+    {
+      return new Promise(function (resolve, reject) 
+      {
+        var data =
+        {
+          'btn': 'switch_sample',
+        }
+        $.ajax
+          ({
+            type: "POST",
+            url: "/",
+            data: JSON.stringify(data, null, '\t'),
+            contentType: 'application/json;charset=UTF-8',
+            success: function (result) 
+            {
+              console.log('ajax successed_switch_sample');
+            },
+            error: function (result) 
+            {
+              console.log('ajax error');
+            }
+          })
+          .done(resolve)
+          .fail(reject);
+      });
+    }
+
+    var p5 = AJAX_SS();
+    Promise.all([p5]).then(values => 
+    {
+      console.log(values);
+      Ex_count = 0;
+      Switch_Sample = true;
+      Ex_Status = 1;
+      //console.log('Ex_Status = ', Ex_Status);
+      if (StopTimer1 == true)
+      {
+        TESTB2();
+      }
+    });
+  }
+
+  function Switch_Purge_F() 
+  {
+    function AJAX_SP() //AJAX_switch_purge
+    {
+      return new Promise(function (resolve, reject) 
+      {
+        var data =
+        {
+          'btn': 'switch_purge',
+        }
+        $.ajax
+          ({
+            type: "POST",
+            url: "/",
+            data: JSON.stringify(data, null, '\t'),
+            contentType: 'application/json;charset=UTF-8',
+            success: function (result) 
+            {
+              console.log('ajax successed_switch_purge');
+            },
+            error: function (result) 
+            {
+              console.log('ajax error');
+            }
+          })
+          .done(resolve)
+          .fail(reject);
+      });
+    }
+
+    var p6 = AJAX_SP();
+    Promise.all([p6]).then(values => 
+    {
+      console.log(values);
+      Ex_count = 0;
+      Switch_Purge = true;
+      Ex_Status = 2;
+      //console.log('Ex_Status = ', Ex_Status);
+      if (StopTimer1 == true)
+      {
+        TESTB2();
+      }
+    });
+  }
+
+
+
+  function TESTA2() 
+  {
+    function AJAX2() 
+    {
+      return new Promise(function (resolve, reject) 
+      {
+        var text1 = document.querySelector("[name='input_text']").value;
+        var data =
+        {
+          'btn': 'ex',
+          'input_gas' : text1,
+        }
+        $.ajax
+          ({
+            type: "POST",
+            url: "/",
+            data: JSON.stringify(data, null, '\t'),
+            contentType: 'application/json;charset=UTF-8',
+            success: function (result) 
+            {
+              console.log('ajax successed');
+            },
+            error: function (result) 
+            {
+              console.log('ajax error');
+            }
+          })
+          .done(resolve)
+          .fail(reject);
+      });
+    }
+
+    function Timer2() 
+    {
+      return new Promise(function (resolve, reject) 
+      {
+        timer2 = setInterval(function () 
+        {
+          console.log("In the timer2 function");
+          resolve('Time is up');
+        }, 1000);
+      });
+    }
+
+    var p3 = AJAX2();
+    var p4 = Timer2();
+    Promise.all([p3, p4]).then(values => 
+    {
+      console.log('Ex_Status = ', Ex_Status);
+      Ex_count++;
+      clearInterval(timer2);
+      console.log(Ex_count, values);
+      //judgment switch sample
+      if (Ex_count == 300 & Ex_Status == 0)
+      {
+        Switch_Sample = false
+      }
+      if (StopTimer1 == true & Switch_Sample == true & Ex_Status == 0) 
+      {
+        TESTB2();
+      }
+      if (StopTimer1 == false)
+      {
+        console.log('stop')
+      }
+      if (Switch_Sample == false)
+      {
+        console.log('time to switch sample')
+        Switch_Sample_F();
+      }
+
+      //judgment switch purge
+      if (Ex_count == 300 & Ex_Status == 1)
+      {
+        Switch_Purge = false
+      }
+      if (StopTimer1 == true & Switch_Purge == true & Ex_Status == 1) 
+      {
+        TESTB2();
+      }
+      if (Switch_Purge == false) 
+      {
+        console.log('time to switch purge')
+        Switch_Purge_F();
+      }
+
+      // judgment experiment done
+      if (Ex_Status == 2)
+      {
+        if(StopTimer1 == true)
+        {
+          TESTB2();
+        }
+        if(Ex_count == 300)
+        {
+          StopTimer1 == false
+          console.log('Experiment Done')
+          Stop_Func();
+          send_ex_done_F();
+        }
+      }
+    });
+  }
+
+  function TESTB2() 
+  {
+    TESTA2();
+  }
+
+  function send_ex_done_F() 
+  {
+    function send_ex_done() 
+    {
+      return new Promise(function (resolve, reject) 
+      {
+        var data =
+        {
+          'btn': 'ex_done',
+        }
+        $.ajax
+          ({
+            type: "POST",
+            url: "/",
+            data: JSON.stringify(data, null, '\t'),
+            contentType: 'application/json;charset=UTF-8',
+            success: function (result) 
+            {
+              console.log('ajax successed_send_ex_done');
+            },
+            error: function (result) 
+            {
+              console.log('ajax error');
+            }
+          })
+          .done(resolve)
+          .fail(reject);
+      });
+    }
+
+    var p7 = send_ex_done();
+    Promise.all([p7]).then(values => 
+    {
+      console.log(values);
+    });
+  }
+
+  </script>
+
+
+
+</body>
+</html>
