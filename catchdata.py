@@ -89,7 +89,7 @@ def Dump2ndjson(content, CheckAllorEx, *args):
   SaveFile_Total(json_dump, All_filename)
   if CheckAllorEx == 1:
     SaveFile_Ex(json_dump, Ex_filename, args[0])
-  print(json_dump)
+  # print(json_dump)
 
 # SENDFLAG = True
 # def send_ex_start():
@@ -125,6 +125,7 @@ def add_ex_finish():
     file_object.write("\n"+experiment_finish)
   with open(filename_allday, "a") as file_object:
     file_object.write("\n"+experiment_finish)
+  print('experiment done!')
 
 class FT232:
   # def CheckPort():
