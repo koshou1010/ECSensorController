@@ -23,9 +23,11 @@ def server():
         input_gas = request.json['input_gas']
         catchdata.Ex_Out(input_gas, machine_id2)
       if request.json['btn'] == 'switch_sample':
-        catchdata.SwitchSample()
+        # catchdata.SwitchSample()
+        catchdata.add_gas_in()
       if request.json['btn'] == 'switch_purge':
-        catchdata.SwitchPurge()
+        # catchdata.SwitchPurge()
+        catchdata.add_gas_out()
       if request.json['btn'] == 'ex_done':
         catchdata.add_ex_finish()
     return render_template('front.html')

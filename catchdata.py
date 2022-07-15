@@ -188,7 +188,7 @@ class FT232:
           if count_SS == 9:
             content = "Rsponse : %s" % line.decode('utf-8') 
             print(content)
-            add_gas_in()
+            # add_gas_in()
             # print("switch to sample successed")
             break
         except:
@@ -201,7 +201,7 @@ class FT232:
           #print("Rsponse : %s" % line.decode('utf-8'))
           if count_SP == 11:
             print("Rsponse : %s" % line.decode('utf-8'))
-            add_gas_out()
+            # add_gas_out()
             # print("switch to sample successed")
             break
         except:
