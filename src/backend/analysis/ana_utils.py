@@ -1,5 +1,5 @@
 import os
-import setting
+import backend.analysis.setting as setting
 import logging
 import copy, ndjson, json
 import pandas as pd

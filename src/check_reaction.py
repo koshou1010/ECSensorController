@@ -1,6 +1,6 @@
 import os, sys
-import setting
-import ana_utils
+import backend.analysis.setting as setting
+import backend.analysis.ana_utils as ana_utils
 import logging
 from datetime import datetime
 

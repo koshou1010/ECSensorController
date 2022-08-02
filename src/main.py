@@ -1,38 +1,16 @@
-import server, utils, catchdata, random, socket
+import backend.server as server
+import backend.utils as utils
+import backend.catchdata as catchdata
+import setting
 import sys
 import webview
 import threading
 from cefpython3 import cefpython as cef
 
-HOST='127.0.0.1'
-RANDOM_PORT = True
-RANDOM_PORT_RANGE=(20000, 60000)
-def tryPort(port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    result = False
-    try:
-        sock.bind((HOST, int(port)))
-        result = True
-    except:
-        print("Port {} is in use".format(port))
-    sock.close()
-    return result
 
-
-def got_port() -> int:
-    if RANDOM_PORT:
-        while True:
-            PORT=random.randint(*RANDOM_PORT_RANGE)
-            if tryPort(PORT):
-                return PORT
-            else:
-                continue
-    else:
-        return 5001
-    
 
 def run_server():
-    server.app.run(debug=False, host=HOST,port=got_port())
+    server.app.run(debug=False, host=setting.HOST,port=setting.got_port())
 
 def set_cef():
     # To pass custom settings to CEF, import and update settings dict
@@ -69,7 +47,7 @@ def run_pywebview():
 
 
 if __name__ == '__main__':
-    server.preprocessing()
+    # server.preprocessing()
     t = threading.Thread(target=run_server)
     t.daemon = True
     t.start()
